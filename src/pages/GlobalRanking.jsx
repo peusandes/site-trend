@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { DATA } from '../data';
 import Sparkle from '../components/Sparkle';
 import Modal from '../components/Modal';
+import { useTheme } from '../contexts/ThemeContext';
 
 const MEDALS = [
   { icon: '🥇', color: '#FBBF24' },
@@ -50,6 +51,8 @@ const FILTERS = [
 /* ── Full ranking modal ─────────────────────────────────────── */
 function FullRankingModal({ onClose }) {
   const [search, setSearch] = useState('');
+  const { isDark } = useTheme();
+  const tickColor = isDark ? '#A090B8' : '#7060A0';
   const { rankingGlobal } = DATA;
 
   const filtered = useMemo(() => {
@@ -84,7 +87,7 @@ function FullRankingModal({ onClose }) {
         }}
       >
         <div style={{
-          background: 'rgba(12,4,26,0.98)',
+          background: 'var(--c-surface-solid)',
           borderRadius: 23,
           display: 'flex', flexDirection: 'column',
           overflow: 'hidden',
@@ -98,7 +101,7 @@ function FullRankingModal({ onClose }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Sparkle size={9} color="#DA6FD8" />
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 800, color: '#fff' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 800, color: 'var(--c-text)' }}>
                 Ranking Completo
               </h2>
               <span style={{
@@ -144,7 +147,7 @@ function FullRankingModal({ onClose }) {
                   width: '100%', background: 'rgba(218,111,216,0.06)',
                   border: '1px solid rgba(218,111,216,0.18)',
                   borderRadius: 10, padding: '9px 14px 9px 36px',
-                  color: '#fff', fontSize: 13,
+                  color: 'var(--c-text)', fontSize: 13,
                   fontFamily: 'var(--font-body)',
                   outline: 'none',
                   transition: 'border-color .2s',
@@ -173,7 +176,7 @@ function FullRankingModal({ onClose }) {
                   {['#', 'Nome', 'Total', 'Eventos', 'Por Evento'].map(h => (
                     <th key={h} style={{
                       padding: '10px 14px', textAlign: 'left',
-                      fontSize: 10, color: 'rgba(160,144,184,0.55)', fontWeight: 700,
+                      fontSize: 10, color: tickColor, opacity: 0.65, fontWeight: 700,
                       textTransform: 'uppercase', letterSpacing: 0.8, whiteSpace: 'nowrap',
                       borderBottom: '1px solid rgba(218,111,216,0.1)',
                     }}>{h}</th>
@@ -210,7 +213,7 @@ function FullRankingModal({ onClose }) {
                       <td style={{ padding: '10px 14px' }}>
                         <span style={{
                           fontSize: 13, fontWeight: medal ? 700 : 400,
-                          color: medal ? medal.color : '#fff',
+                          color: medal ? medal.color : 'var(--c-text)',
                         }}>{pessoa.nome}</span>
                       </td>
                       <td style={{ padding: '10px 14px' }}>
@@ -258,6 +261,8 @@ export default function GlobalRanking() {
   const [filter,      setFilter]      = useState('todos');
   const [showAllModal, setShowAllModal] = useState(false);
   const { rankingGlobal } = DATA;
+  const { isDark } = useTheme();
+  const tickColor = isDark ? '#A090B8' : '#7060A0';
 
   const filtrado = useMemo(
     () => filter === 'todos'
@@ -388,7 +393,7 @@ export default function GlobalRanking() {
                 {['#', 'Nome', 'Total', 'Eventos', 'Por Evento'].map(h => (
                   <th key={h} style={{
                     padding: '10px 14px', textAlign: 'left',
-                    fontSize: 10, color: 'rgba(160,144,184,0.55)', fontWeight: 700,
+                    fontSize: 10, color: tickColor, opacity: 0.65, fontWeight: 700,
                     textTransform: 'uppercase', letterSpacing: 0.8, whiteSpace: 'nowrap',
                   }}>{h}</th>
                 ))}
@@ -428,7 +433,7 @@ export default function GlobalRanking() {
                     <td style={{ padding: '12px 14px' }}>
                       <span style={{
                         fontSize: 13, fontWeight: medal ? 700 : 500,
-                        color: medal ? medal.color : '#fff',
+                        color: medal ? medal.color : 'var(--c-text)',
                       }}>{pessoa.nome}</span>
                     </td>
                     <td style={{ padding: '12px 14px' }}>

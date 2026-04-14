@@ -24,14 +24,14 @@ function DataRow({ label, value }) {
     <div style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
       padding: '10px 0',
-      borderBottom: '1px solid rgba(218,111,216,0.08)',
+      borderBottom: '1px solid var(--c-row-border)',
     }}>
-      <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#A090B8', fontWeight: 400 }}>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', fontWeight: 400 }}>
         {label}
       </span>
       <span style={{
         fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500,
-        color: '#fff', textAlign: 'right', maxWidth: '62%', wordBreak: 'break-all',
+        color: 'var(--c-text)', textAlign: 'right', maxWidth: '62%', wordBreak: 'break-all',
       }}>
         {value}
       </span>
@@ -57,7 +57,7 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(8,3,18,0.82)',
+        background: 'var(--c-overlay)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -77,7 +77,7 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
         }}
       >
         <div style={{
-          background: 'rgba(12,4,26,0.97)',
+          background: 'var(--c-surface-solid)',
           borderRadius: 23,
           padding: '26px 28px',
           backdropFilter: 'blur(30px)',
@@ -88,13 +88,13 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 5 }}>
                 <Sparkle size={8} color="#DA6FD8" />
-                <span style={{ fontSize: 10, color: '#A090B8', textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
+                <span style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                   {isGlobal ? 'Ranking Global' : eventoNome}
                 </span>
               </div>
               <h2 style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 21, fontWeight: 800, color: '#fff', lineHeight: 1.15,
+                fontSize: 21, fontWeight: 800, color: 'var(--c-text)', lineHeight: 1.15,
               }}>
                 {pessoa.nome}
               </h2>
@@ -128,7 +128,7 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 44, fontWeight: 800,
-              background: 'linear-gradient(135deg, #fff, #DA6FD8)',
+              background: 'linear-gradient(135deg, var(--c-text), #DA6FD8)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -137,15 +137,15 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
               {tickets}
             </span>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', fontFamily: 'var(--font-display)' }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--c-text)', fontFamily: 'var(--font-display)' }}>
                 ingresso{tickets !== 1 ? 's' : ''}
               </div>
               {isGlobal ? (
-                <div style={{ fontSize: 12, color: '#A090B8', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
                   em {pessoa.numEventos} evento{pessoa.numEventos !== 1 ? 's' : ''}
                 </div>
               ) : eventoNome ? (
-                <div style={{ fontSize: 12, color: '#A090B8', marginTop: 2 }}>no {eventoNome}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>no {eventoNome}</div>
               ) : null}
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
           {/* Event breakdown (global) */}
           {isGlobal && pessoa.eventos && Object.keys(pessoa.eventos).length > 0 && (
             <div style={{ marginTop: 18 }}>
-              <p style={{ fontSize: 10, color: '#A090B8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 }}>
+              <p style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 }}>
                 Ingressos por evento
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -178,7 +178,7 @@ export default function Modal({ pessoa, eventoNome, onClose, isGlobal = false })
                       display: 'flex', alignItems: 'center', gap: 7,
                     }}>
                       <span style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 800, color: ev.color }}>{qtd}</span>
-                      <span style={{ fontSize: 12, color: '#A090B8' }}>{ev.label}</span>
+                      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{ev.label}</span>
                     </div>
                   );
                 })}

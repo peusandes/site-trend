@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { DATA } from '../data';
 import Sparkle from '../components/Sparkle';
 import { useCounter } from '../hooks/useCounter';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend, Cell,
@@ -34,7 +35,7 @@ function MetricCard({ icon, label, rawValue, formatted, sub, delay = 0 }) {
         <div className="display-num" style={{ fontSize: 38, animationDelay: `${delay}ms` }}>
           {displayed}
         </div>
-        {sub && <p style={{ fontSize: 12, color: '#A090B8', marginTop: 7 }}>{sub}</p>}
+        {sub && <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 7 }}>{sub}</p>}
       </div>
     </div>
   );
@@ -85,10 +86,10 @@ function EventCard({ evento, onClick, index }) {
           </span>
         </div>
 
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 800, color: 'var(--c-text)', marginBottom: 4 }}>
           {evento.nome}
         </h3>
-        <p style={{ fontSize: 12, color: '#A090B8', marginBottom: 18 }}>{evento.data}</p>
+        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>{evento.data}</p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           <MetricRow label="Ingressos" value={evento.totalIngressos.toLocaleString('pt-BR')} color={glow} />
@@ -114,8 +115,8 @@ function EventCard({ evento, onClick, index }) {
 function MetricRow({ label, value, color }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ fontSize: 12, color: '#A090B8' }}>{label}</span>
-      <span style={{ fontSize: 13, fontWeight: 700, color: color || '#fff' }}>{value}</span>
+      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 700, color: color || 'var(--c-text)' }}>{value}</span>
     </div>
   );
 }
@@ -125,10 +126,10 @@ const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="tooltip-glass" style={{ padding: '10px 14px', minWidth: 140 }}>
-      <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: '#fff', marginBottom: 8, fontSize: 13 }}>{label}</p>
+      <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--c-text)', marginBottom: 8, fontSize: 13 }}>{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ fontSize: 12, color: p.fill, marginBottom: 2 }}>
-          {p.name}: <strong style={{ color: '#fff' }}>{p.value.toLocaleString('pt-BR')}</strong>
+          {p.name}: <strong style={{ color: 'var(--c-text)' }}>{p.value.toLocaleString('pt-BR')}</strong>
         </p>
       ))}
     </div>
@@ -138,6 +139,10 @@ const ChartTooltip = ({ active, payload, label }) => {
 /* ── Page ───────────────────────────────────────────────────── */
 export default function Overview({ onEventClick }) {
   const { resumo, eventos } = DATA;
+  const { isDark } = useTheme();
+
+  const tickColor     = isDark ? '#A090B8'               : '#7060A0';
+  const tickColorFaint = isDark ? 'rgba(160,144,184,0.5)' : 'rgba(112,96,160,0.6)';
 
   const chartData = useMemo(() => eventos.map(ev => ({
     name: ev.nome,
@@ -153,7 +158,7 @@ export default function Overview({ onEventClick }) {
         <Sparkle size={14} color="#DA6FD8" style={{ marginTop: 5, flexShrink: 0 }} />
         <div>
           <h1 className="page-heading">Visão Geral</h1>
-          <p style={{ fontSize: 13, color: '#A090B8', marginTop: 4, fontWeight: 300 }}>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4, fontWeight: 300 }}>
             Programa de Fidelidade Trend — Salvador-BA
           </p>
         </div>
@@ -223,19 +228,19 @@ export default function Overview({ onEventClick }) {
             <XAxis
               dataKey="name"
               stroke="transparent"
-              tick={{ fill: '#A090B8', fontSize: 13, fontFamily: 'var(--font-display)', fontWeight: 600 }}
+              tick={{ fill: tickColor, fontSize: 13, fontFamily: 'var(--font-display)', fontWeight: 600 }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
               stroke="transparent"
-              tick={{ fill: 'rgba(160,144,184,0.5)', fontSize: 11 }}
+              tick={{ fill: tickColorFaint, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
             />
             <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(218,111,216,0.05)' }} />
             <Legend
-              formatter={v => <span style={{ color: '#A090B8', fontSize: 12, fontFamily: 'var(--font-body)' }}>{v}</span>}
+              formatter={v => <span style={{ color: tickColor, fontSize: 12, fontFamily: 'var(--font-body)' }}>{v}</span>}
               iconType="circle"
               iconSize={8}
             />

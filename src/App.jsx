@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Sidebar from './components/Sidebar';
 import Overview from './pages/Overview';
 import EventPage from './pages/EventPage';
@@ -7,7 +8,7 @@ import Statistics from './pages/Statistics';
 import Sparkle from './components/Sparkle';
 import ParticleField from './components/ParticleField';
 
-export default function App() {
+function AppInner() {
   const [activePage, setActivePage] = useState('overview');
   const [activeEvent, setActiveEvent] = useState(null);
 
@@ -63,5 +64,13 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppInner />
+    </ThemeProvider>
   );
 }

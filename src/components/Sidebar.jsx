@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Sparkle from './Sparkle';
 import { DATA } from '../data';
+import { useTheme } from '../contexts/ThemeContext';
 
 const NAV = [
   { key: 'overview',    label: 'Visão Geral',    Icon: IconGrid },
@@ -39,6 +40,21 @@ function IconChart() {
     </svg>
   );
 }
+function IconSun() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <circle cx="7.5" cy="7.5" r="3" fill="currentColor"/>
+      <path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3.1 3.1l1.06 1.06M10.84 10.84l1.06 1.06M10.84 3.1l-1.06 1.06M3.1 10.84l1.06 1.06" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function IconMoon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <path d="M12.5 9.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 7 7Z" fill="currentColor"/>
+    </svg>
+  );
+}
 
 /* ── Trend Logo SVG ───────────────────────────────────────────── */
 function TrendLogo({ size = 26 }) {
@@ -47,7 +63,7 @@ function TrendLogo({ size = 26 }) {
       <text x="0" y="23"
         fontFamily="'Plus Jakarta Sans', 'Arial Black', sans-serif"
         fontWeight="800" fontSize="25"
-        fill="#FFFFFF">trend</text>
+        fill="var(--c-text)">trend</text>
       {/* Sparkle at the top of the 'd' ascender */}
       <path d="M74 0 L75.2 3.5 L79 5 L75.2 6.5 L74 10 L72.8 6.5 L69 5 L72.8 3.5 Z"
         fill="#DA6FD8" />
@@ -57,6 +73,7 @@ function TrendLogo({ size = 26 }) {
 
 export default function Sidebar({ activePage, onNavigate, activeEvent, onEventClick }) {
   const [collapsed, setCollapsed] = useState(false);
+  const { isDark, toggle } = useTheme();
 
   const isActive = (key) => activePage === key && !activeEvent;
 
@@ -64,8 +81,8 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
     <aside style={{
       width:     collapsed ? 62 : 236,
       minWidth:  collapsed ? 62 : 236,
-      background:'rgba(12, 4, 26, 0.92)',
-      borderRight: '1px solid rgba(218,111,216,0.12)',
+      background: 'var(--c-sidebar-bg)',
+      borderRight: '1px solid var(--c-border)',
       backdropFilter: 'blur(30px)',
       WebkitBackdropFilter: 'blur(30px)',
       display:   'flex',
@@ -122,7 +139,7 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
       {/* ── Main nav ── */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {!collapsed && (
-          <p style={{ fontSize: 10, color: 'rgba(160,144,184,0.5)', fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase', padding: '0 10px', marginBottom: 6 }}>
+          <p style={{ fontSize: 10, color: 'var(--muted)', opacity: 0.6, fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase', padding: '0 10px', marginBottom: 6 }}>
             Menu
           </p>
         )}
@@ -137,10 +154,10 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
-                padding: collapsed ? '11px 12px' : '11px 12px',
+                padding: '11px 12px',
                 borderRadius: 12,
                 cursor: 'pointer',
-                color:  active ? '#DA6FD8' : '#A090B8',
+                color:  active ? '#DA6FD8' : 'var(--muted)',
                 borderLeft: active ? undefined : '2px solid transparent',
                 transition: 'all .2s',
                 whiteSpace: 'nowrap',
@@ -148,7 +165,7 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
                 userSelect: 'none',
               }}
               onMouseEnter={e => { if (!active) { e.currentTarget.style.color = '#F0B4EF'; e.currentTarget.style.background = 'rgba(218,111,216,0.06)'; }}}
-              onMouseLeave={e => { if (!active) { e.currentTarget.style.color = '#A090B8';  e.currentTarget.style.background = 'transparent'; }}}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.background = 'transparent'; }}}
             >
               <span style={{ flexShrink: 0, display: 'flex' }}><Icon /></span>
               {!collapsed && (
@@ -160,12 +177,12 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
       </nav>
 
       {/* ── Divider ── */}
-      <div style={{ height: 1, background: 'rgba(218,111,216,0.08)', margin: '18px 0' }} />
+      <div style={{ height: 1, background: 'var(--c-border)', margin: '18px 0' }} />
 
       {/* ── Eventos ── */}
       <div style={{ flex: 1, minHeight: 0 }}>
         {!collapsed && (
-          <p style={{ fontSize: 10, color: 'rgba(160,144,184,0.5)', fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase', padding: '0 10px', marginBottom: 8 }}>
+          <p style={{ fontSize: 10, color: 'var(--muted)', opacity: 0.6, fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase', padding: '0 10px', marginBottom: 8 }}>
             Eventos
           </p>
         )}
@@ -192,14 +209,15 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
                   overflow: 'hidden',
                   userSelect: 'none',
                 }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(218,111,216,0.06)'; }}}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; }}}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(218,111,216,0.06)'; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
               >
                 {collapsed ? (
                   <div style={{
                     width: 8, height: 8,
                     borderRadius: '50%',
-                    background: active ? color : 'rgba(160,144,184,0.4)',
+                    background: active ? color : 'var(--muted)',
+                    opacity: active ? 1 : 0.4,
                     flexShrink: 0,
                     boxShadow: active ? `0 0 8px ${color}` : 'none',
                     transition: 'all .2s',
@@ -209,14 +227,15 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                       <div style={{
                         width: 7, height: 7, borderRadius: '50%',
-                        background: active ? color : 'rgba(160,144,184,0.3)',
+                        background: active ? color : 'var(--muted)',
+                        opacity: active ? 1 : 0.35,
                         flexShrink: 0,
                         boxShadow: active ? `0 0 8px ${color}` : 'none',
                         transition: 'all .2s',
                       }} />
                       <span style={{
                         fontSize: 13, fontWeight: active ? 600 : 400,
-                        color: active ? '#fff' : '#A090B8',
+                        color: active ? 'var(--c-text)' : 'var(--muted)',
                         overflow: 'hidden', textOverflow: 'ellipsis',
                         transition: 'color .2s',
                       }}>{ev.nome}</span>
@@ -241,20 +260,50 @@ export default function Sidebar({ activePage, onNavigate, activeEvent, onEventCl
         </div>
       </div>
 
-      {/* ── Footer ── */}
-      {!collapsed && (
-        <div style={{ paddingTop: 16, borderTop: '1px solid rgba(218,111,216,0.08)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-            <Sparkle size={7} color="rgba(160,144,184,0.4)" />
-            <span style={{ fontSize: 11, color: 'rgba(160,144,184,0.5)', fontFamily: 'var(--font-display)' }}>
-              Trend Fidelidade v1.0
+      {/* ── Theme toggle ── */}
+      <div style={{ paddingTop: 14, borderTop: '1px solid var(--c-border)', marginTop: 14 }}>
+        <button
+          onClick={toggle}
+          title={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            gap: 9,
+            background: 'rgba(218,111,216,0.06)',
+            border: '1px solid var(--c-border)',
+            borderRadius: 10,
+            padding: collapsed ? '9px' : '9px 12px',
+            cursor: 'pointer',
+            color: 'var(--muted)',
+            fontSize: 12, fontWeight: 500,
+            fontFamily: 'var(--font-body)',
+            transition: 'all .2s',
+            marginBottom: 14,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#DA6FD8'; e.currentTarget.style.borderColor = 'rgba(218,111,216,0.4)'; e.currentTarget.style.background = 'rgba(218,111,216,0.12)'; }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'var(--c-border)'; e.currentTarget.style.background = 'rgba(218,111,216,0.06)'; }}
+        >
+          {isDark ? <IconSun /> : <IconMoon />}
+          {!collapsed && (isDark ? 'Modo Claro' : 'Modo Escuro')}
+        </button>
+
+        {/* ── Footer ── */}
+        {!collapsed && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+              <Sparkle size={7} color="var(--muted)" style={{ opacity: 0.4 }} />
+              <span style={{ fontSize: 11, color: 'var(--muted)', opacity: 0.5, fontFamily: 'var(--font-display)' }}>
+                Trend Fidelidade v1.0
+              </span>
+            </div>
+            <span style={{ fontSize: 10, color: 'var(--muted)', opacity: 0.3, paddingLeft: 13 }}>
+              {DATA.geradoEm}
             </span>
-          </div>
-          <span style={{ fontSize: 10, color: 'rgba(160,144,184,0.3)', paddingLeft: 13 }}>
-            {DATA.geradoEm}
-          </span>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </aside>
   );
 }

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { DATA } from '../data';
 import Sparkle from '../components/Sparkle';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
@@ -14,26 +15,29 @@ const STATUS_STYLE = {
   'EM VENDAS': { color: '#4ADE80', bg: 'rgba(74,222,128,0.08)',  border: 'rgba(74,222,128,0.22)',  label: 'Em Vendas' },
 };
 
-const BarTooltip = ({ active, payload, label }) => {
+function BarTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="tooltip-glass" style={{ padding: '10px 14px' }}>
-      <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: '#fff', marginBottom: 6, fontSize: 13 }}>{label}</p>
+      <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--c-text)', marginBottom: 6, fontSize: 13 }}>{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ fontSize: 12, color: p.fill }}>
-          {p.name}: <strong style={{ color: '#fff' }}>{p.value}</strong>
+          {p.name}: <strong style={{ color: 'var(--c-text)' }}>{p.value}</strong>
         </p>
       ))}
     </div>
   );
-};
+}
 
 function PieCard({ titulo, data, total }) {
+  const { isDark } = useTheme();
+  const tickColor = isDark ? '#A090B8' : '#7060A0';
+
   return (
     <div className="glass" style={{ flex: 1, minWidth: 195, borderRadius: 18, padding: '18px 18px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
         <Sparkle size={7} color="#DA6FD8" />
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, color: '#fff' }}>{titulo}</h3>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, color: 'var(--c-text)' }}>{titulo}</h3>
       </div>
       <ResponsiveContainer width="100%" height={145}>
         <PieChart>
@@ -50,8 +54,8 @@ function PieCard({ titulo, data, total }) {
           </Pie>
           <Tooltip
             formatter={v => [v, '']}
-            contentStyle={{ background: 'rgba(12,4,26,0.96)', border: '1px solid rgba(218,111,216,0.3)', borderRadius: 8 }}
-            itemStyle={{ color: '#A090B8' }}
+            contentStyle={{ background: 'var(--c-surface-solid)', border: '1px solid rgba(218,111,216,0.3)', borderRadius: 8 }}
+            itemStyle={{ color: tickColor }}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -60,9 +64,9 @@ function PieCard({ titulo, data, total }) {
           <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: PIE_COLORS[i], boxShadow: `0 0 6px ${PIE_COLORS[i]}88`, flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: '#A090B8' }}>{d.name}</span>
+              <span style={{ fontSize: 11, color: 'var(--muted)' }}>{d.name}</span>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#fff' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--c-text)' }}>
               {((d.value / total) * 100).toFixed(1)}%
             </span>
           </div>
@@ -74,6 +78,10 @@ function PieCard({ titulo, data, total }) {
 
 export default function Statistics() {
   const { eventos, resumo } = DATA;
+  const { isDark } = useTheme();
+
+  const tickColor      = isDark ? '#A090B8'               : '#7060A0';
+  const tickColorFaint = isDark ? 'rgba(160,144,184,0.5)' : 'rgba(112,96,160,0.6)';
 
   const idades = useMemo(() => [
     ...eventos.map(ev => ({ name: ev.nome, 'Idade Média': ev.idadeMedia })),
@@ -99,7 +107,7 @@ export default function Statistics() {
         <Sparkle size={14} color="#DA6FD8" style={{ marginTop: 5 }} />
         <div>
           <h1 className="page-heading">Estatísticas</h1>
-          <p style={{ fontSize: 13, color: '#A090B8', marginTop: 4, fontWeight: 300 }}>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4, fontWeight: 300 }}>
             Análise detalhada por evento e geral
           </p>
         </div>
@@ -120,8 +128,8 @@ export default function Statistics() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(218,111,216,0.07)" vertical={false} />
-            <XAxis dataKey="name" stroke="transparent" tick={{ fill: '#A090B8', fontSize: 12, fontFamily: 'var(--font-display)', fontWeight: 600 }} tickLine={false} axisLine={false} />
-            <YAxis stroke="transparent" tick={{ fill: 'rgba(160,144,184,0.5)', fontSize: 11 }} tickLine={false} axisLine={false} domain={[18, 28]} />
+            <XAxis dataKey="name" stroke="transparent" tick={{ fill: tickColor, fontSize: 12, fontFamily: 'var(--font-display)', fontWeight: 600 }} tickLine={false} axisLine={false} />
+            <YAxis stroke="transparent" tick={{ fill: tickColorFaint, fontSize: 11 }} tickLine={false} axisLine={false} domain={[18, 28]} />
             <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(218,111,216,0.05)' }} />
             <Bar dataKey="Idade Média" fill="url(#ageGrad)" radius={[7, 7, 0, 0]} maxBarSize={64}
               label={{ position: 'top', fill: '#DA6FD8', fontWeight: 800, fontSize: 12, fontFamily: 'var(--font-display)' }}
@@ -146,17 +154,16 @@ export default function Statistics() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 9 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 8, height: 8, borderRadius: '50%', background: col, boxShadow: `0 0 8px ${col}`, flexShrink: 0 }} />
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#fff' }}>{ev.nome}</span>
-                    <span style={{ fontSize: 11, color: '#A090B8' }}>{ev.data}</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: 'var(--c-text)' }}>{ev.nome}</span>
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{ev.data}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 800, color: col }}>
                       {ev.totalIngressos.toLocaleString('pt-BR')}
                     </span>
-                    <span style={{ fontSize: 11, color: '#A090B8' }}>{pct}%</span>
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{pct}%</span>
                   </div>
                 </div>
-                {/* Animated progress bar */}
                 <div className="progress-bar" style={{
                   height: 8,
                   background: 'rgba(218,111,216,0.08)',
@@ -174,7 +181,7 @@ export default function Statistics() {
                     animationDelay: `${idx * 150}ms`,
                   }} />
                 </div>
-                <p style={{ fontSize: 11, color: 'rgba(160,144,184,0.6)', marginTop: 5 }}>
+                <p style={{ fontSize: 11, color: 'var(--muted)', opacity: 0.6, marginTop: 5 }}>
                   {ev.totalPessoas.toLocaleString('pt-BR')} pessoas · {ev.idadeMedia} anos média
                 </p>
               </div>
@@ -208,7 +215,7 @@ export default function Statistics() {
       <div className="glass" style={{ borderRadius: 20, overflow: 'hidden' }}>
         <div style={{
           padding: '18px 22px 14px',
-          borderBottom: '1px solid rgba(218,111,216,0.1)',
+          borderBottom: '1px solid var(--c-row-border)',
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <Sparkle size={9} color="#DA6FD8" />
@@ -217,11 +224,11 @@ export default function Statistics() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: 'rgba(218,111,216,0.03)' }}>
+              <tr style={{ background: 'var(--c-thead-bg)' }}>
                 {['Evento','Data','Status','Ingressos','Pessoas','Idade Méd.','% Fem.','% Masc.'].map(h => (
                   <th key={h} style={{
                     padding: '9px 14px', textAlign: 'left',
-                    fontSize: 10, color: 'rgba(160,144,184,0.55)', fontWeight: 700,
+                    fontSize: 10, color: tickColor, opacity: 0.65, fontWeight: 700,
                     textTransform: 'uppercase', letterSpacing: 0.8, whiteSpace: 'nowrap',
                   }}>{h}</th>
                 ))}
@@ -232,14 +239,14 @@ export default function Statistics() {
                 const st  = STATUS_STYLE[ev.status] || STATUS_STYLE['REALIZADA'];
                 const col = EVENTO_COLS[ev.key] || '#DA6FD8';
                 return (
-                  <tr key={ev.key} style={{ borderBottom: '1px solid rgba(218,111,216,0.07)' }}>
+                  <tr key={ev.key} style={{ borderBottom: '1px solid var(--c-row-border)' }}>
                     <td style={{ padding: '12px 14px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{ width: 7, height: 7, borderRadius: '50%', background: col, boxShadow: `0 0 7px ${col}`, flexShrink: 0 }} />
-                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: '#fff', fontSize: 13 }}>{ev.nome}</span>
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--c-text)', fontSize: 13 }}>{ev.nome}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '12px 14px', color: '#A090B8', fontSize: 12 }}>{ev.data}</td>
+                    <td style={{ padding: '12px 14px', color: 'var(--muted)', fontSize: 12 }}>{ev.data}</td>
                     <td style={{ padding: '12px 14px' }}>
                       <span style={{ background: st.bg, border: `1px solid ${st.border}`, borderRadius: 6, padding: '2px 8px', fontSize: 10, fontWeight: 700, color: st.color }}>{st.label}</span>
                     </td>
@@ -248,8 +255,8 @@ export default function Statistics() {
                         {ev.totalIngressos.toLocaleString('pt-BR')}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 14px', color: '#fff', fontSize: 13 }}>{ev.totalPessoas.toLocaleString('pt-BR')}</td>
-                    <td style={{ padding: '12px 14px', color: '#fff', fontSize: 13 }}>{ev.idadeMedia}a</td>
+                    <td style={{ padding: '12px 14px', color: 'var(--c-text)', fontSize: 13 }}>{ev.totalPessoas.toLocaleString('pt-BR')}</td>
+                    <td style={{ padding: '12px 14px', color: 'var(--c-text)', fontSize: 13 }}>{ev.idadeMedia}a</td>
                     <td style={{ padding: '12px 14px' }}>
                       <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: '#DA6FD8' }}>{ev.genero.pctFeminino}%</span>
                     </td>
@@ -260,11 +267,11 @@ export default function Statistics() {
                 );
               })}
               {/* Totals row */}
-              <tr style={{ background: 'rgba(218,111,216,0.04)', borderTop: '1px solid rgba(218,111,216,0.15)' }}>
+              <tr style={{ background: 'var(--c-thead-bg)', borderTop: '1px solid rgba(218,111,216,0.15)' }}>
                 <td style={{ padding: '12px 14px' }}>
                   <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, color: '#DA6FD8', fontSize: 13, letterSpacing: 0.5 }}>TOTAL</span>
                 </td>
-                <td style={{ padding: '12px 14px', color: 'rgba(160,144,184,0.4)', fontSize: 12 }}>—</td>
+                <td style={{ padding: '12px 14px', color: 'var(--muted)', opacity: 0.4, fontSize: 12 }}>—</td>
                 <td style={{ padding: '12px 14px' }}>
                   <span style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 6, padding: '2px 8px', fontSize: 10, fontWeight: 700, color: '#4ADE80' }}>
                     {DATA.eventos.filter(e => e.status === 'EM VENDAS').length} em vendas
@@ -276,11 +283,11 @@ export default function Statistics() {
                   </span>
                 </td>
                 <td style={{ padding: '12px 14px' }}>
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: '#fff', fontSize: 14 }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--c-text)', fontSize: 14 }}>
                     {resumo.totalPessoas.toLocaleString('pt-BR')}
                   </span>
                 </td>
-                <td style={{ padding: '12px 14px', color: '#fff', fontSize: 13, fontWeight: 700 }}>{resumo.idadeMedia}a</td>
+                <td style={{ padding: '12px 14px', color: 'var(--c-text)', fontSize: 13, fontWeight: 700 }}>{resumo.idadeMedia}a</td>
                 <td style={{ padding: '12px 14px' }}>
                   <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, color: '#DA6FD8' }}>{resumo.genero.pctFeminino}%</span>
                 </td>

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { DATA } from '../data';
 import Sparkle from '../components/Sparkle';
 import Modal from '../components/Modal';
+import { useTheme } from '../contexts/ThemeContext';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const MEDALS = [
@@ -27,8 +28,11 @@ function calcIdade(nasc) {
 
 export default function EventPage({ eventoKey, onBack }) {
   const [modalPessoa, setModalPessoa] = useState(null);
+  const { isDark } = useTheme();
   const evento = DATA.eventos.find(e => e.key === eventoKey);
   if (!evento) return null;
+
+  const tickColor = isDark ? '#A090B8' : '#7060A0';
 
   const st      = STATUS_STYLE[evento.status] || STATUS_STYLE['REALIZADA'];
   const pieData = useMemo(() => [
@@ -80,7 +84,7 @@ export default function EventPage({ eventoKey, onBack }) {
           )}
           <span style={{ fontSize: 11, fontWeight: 700, color: st.color }}>{st.label}</span>
         </div>
-        <span style={{ fontSize: 13, color: '#A090B8' }}>{evento.data}</span>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>{evento.data}</span>
       </div>
 
       {/* 3 metrics */}
@@ -94,7 +98,7 @@ export default function EventPage({ eventoKey, onBack }) {
             <div className="grad-border-inner" style={{ padding: '20px 22px', borderRadius: 20 }}>
               <p className="metric-label" style={{ marginBottom: 10 }}>{m.label}</p>
               <p className="display-num" style={{ fontSize: 32, animationDelay: `${i * 100}ms` }}>{m.val}</p>
-              <p style={{ fontSize: 12, color: '#A090B8', marginTop: 5 }}>{m.sub}</p>
+              <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 5 }}>{m.sub}</p>
             </div>
           </div>
         ))}
@@ -107,7 +111,7 @@ export default function EventPage({ eventoKey, onBack }) {
         <div className="glass" style={{ flex: 2, minWidth: 300, borderRadius: 20, overflow: 'hidden' }}>
           <div style={{
             padding: '18px 22px 14px',
-            borderBottom: '1px solid rgba(218,111,216,0.1)',
+            borderBottom: '1px solid var(--c-row-border)',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <Sparkle size={9} color="#DA6FD8" />
@@ -117,12 +121,13 @@ export default function EventPage({ eventoKey, onBack }) {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: 'rgba(218,111,216,0.04)' }}>
+                <tr style={{ background: 'var(--c-thead-bg)' }}>
                   {['#', 'Nome', 'Ingressos', 'Sexo', 'Idade'].map(h => (
                     <th key={h} style={{
                       padding: '9px 14px', textAlign: 'left',
-                      fontSize: 10, color: 'rgba(160,144,184,0.6)', fontWeight: 700,
+                      fontSize: 10, color: tickColor, fontWeight: 700,
                       textTransform: 'uppercase', letterSpacing: 0.8, whiteSpace: 'nowrap',
+                      opacity: 0.6,
                     }}>{h}</th>
                   ))}
                 </tr>
@@ -137,13 +142,13 @@ export default function EventPage({ eventoKey, onBack }) {
                       className="tr-stagger"
                       onClick={() => setModalPessoa(pessoa)}
                       style={{
-                        borderBottom: '1px solid rgba(218,111,216,0.07)',
+                        borderBottom: '1px solid var(--c-row-border)',
                         cursor: 'pointer',
                         transition: 'background .18s',
                         animationDelay: `${Math.min(i * 30, 400)}ms`,
                       }}
                       onMouseEnter={e => {
-                        e.currentTarget.style.background = 'rgba(218,111,216,0.08)';
+                        e.currentTarget.style.background = 'var(--c-row-hover)';
                         e.currentTarget.style.borderLeft = '2px solid rgba(218,111,216,0.4)';
                       }}
                       onMouseLeave={e => {
@@ -159,14 +164,14 @@ export default function EventPage({ eventoKey, onBack }) {
                             filter: `drop-shadow(0 0 5px ${medal.glow})`,
                           }}>{medal.icon}</span>
                         ) : (
-                          <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(160,144,184,0.5)' }}>{i + 1}</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: tickColor, opacity: 0.5 }}>{i + 1}</span>
                         )}
                       </td>
                       {/* Name */}
                       <td style={{ padding: '12px 14px' }}>
                         <span style={{
                           fontSize: 13, fontWeight: medal ? 700 : 500,
-                          color: medal ? medal.color : '#fff',
+                          color: medal ? medal.color : 'var(--c-text)',
                         }}>{pessoa.nome}</span>
                       </td>
                       {/* Tickets */}
@@ -181,12 +186,12 @@ export default function EventPage({ eventoKey, onBack }) {
                         }}>{pessoa.ingressos}</span>
                       </td>
                       {/* Gender */}
-                      <td style={{ padding: '12px 14px', fontSize: 12, color: '#A090B8' }}>
+                      <td style={{ padding: '12px 14px', fontSize: 12, color: 'var(--muted)' }}>
                         {pessoa.sexo === 'Feminino' ? '♀' : pessoa.sexo === 'Masculino' ? '♂' : '—'}
                         {' '}{pessoa.sexo}
                       </td>
                       {/* Age */}
-                      <td style={{ padding: '12px 14px', fontSize: 12, color: '#A090B8' }}>
+                      <td style={{ padding: '12px 14px', fontSize: 12, color: 'var(--muted)' }}>
                         {idade ?? '—'}
                       </td>
                     </tr>
@@ -227,13 +232,13 @@ export default function EventPage({ eventoKey, onBack }) {
               <Tooltip
                 formatter={(v, n) => [v.toLocaleString('pt-BR'), n]}
                 contentStyle={{
-                  background: 'rgba(12,4,26,0.97)',
+                  background: 'var(--c-surface-solid)',
                   border: '1px solid rgba(218,111,216,0.3)',
                   borderRadius: 10,
                   boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
                 }}
-                itemStyle={{ color: '#A090B8' }}
-                labelStyle={{ color: '#fff', fontWeight: 700 }}
+                itemStyle={{ color: tickColor }}
+                labelStyle={{ color: 'var(--c-text)', fontWeight: 700 }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -247,9 +252,9 @@ export default function EventPage({ eventoKey, onBack }) {
                     background: PIE_COLORS[i],
                     boxShadow: `0 0 8px ${PIE_COLORS[i]}80`,
                   }} />
-                  <span style={{ fontSize: 12, color: '#A090B8' }}>{d.name}</span>
+                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>{d.name}</span>
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#fff' }}>
+                <span style={{ fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--c-text)' }}>
                   {((d.value / evento.totalPessoas) * 100).toFixed(1)}%
                 </span>
               </div>
