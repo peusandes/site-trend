@@ -44,19 +44,13 @@ function IconChart() {
 function TrendLogo({ size = 26 }) {
   return (
     <svg height={size} viewBox="0 0 106 28" fill="none" style={{ display: 'block' }}>
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="100%" y2="0">
-          <stop offset="0%"   stopColor="#F0B4EF"/>
-          <stop offset="100%" stopColor="#DA6FD8"/>
-        </linearGradient>
-      </defs>
       <text x="0" y="23"
-        fontFamily="'Syne', 'Arial Black', sans-serif"
+        fontFamily="'Plus Jakarta Sans', 'Arial Black', sans-serif"
         fontWeight="800" fontSize="25"
-        fill="url(#logoGrad)">trend</text>
+        fill="#FFFFFF">trend</text>
       {/* Sparkle replacing the dot on 'd' */}
       <path d="M88 1 L89.5 5.5 L94 7 L89.5 8.5 L88 13 L86.5 8.5 L82 7 L86.5 5.5 Z"
-        fill="url(#logoGrad)" />
+        fill="#DA6FD8" />
     </svg>
   );
 }
