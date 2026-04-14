@@ -43,13 +43,13 @@ function IconChart() {
 /* ── Trend Logo SVG ───────────────────────────────────────────── */
 function TrendLogo({ size = 26 }) {
   return (
-    <svg height={size} viewBox="0 0 106 28" fill="none" style={{ display: 'block' }}>
+    <svg height={size} viewBox="0 0 90 28" fill="none" style={{ display: 'block' }}>
       <text x="0" y="23"
         fontFamily="'Plus Jakarta Sans', 'Arial Black', sans-serif"
         fontWeight="800" fontSize="25"
         fill="#FFFFFF">trend</text>
-      {/* Sparkle replacing the dot on 'd' */}
-      <path d="M88 1 L89.5 5.5 L94 7 L89.5 8.5 L88 13 L86.5 8.5 L82 7 L86.5 5.5 Z"
+      {/* Sparkle at the top of the 'd' ascender */}
+      <path d="M74 0 L75.2 3.5 L79 5 L75.2 6.5 L74 10 L72.8 6.5 L69 5 L72.8 3.5 Z"
         fill="#DA6FD8" />
     </svg>
   );
